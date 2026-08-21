@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 2 - passing properties to a component</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="importmap">
+        {
+            "imports" :{
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script type="module">
+        import React from "react"
+        import { createRoot } from "react-dom/client"
+
+        const Catalog = [
+           'Swansea City Shirt',
+           'cardiff City Shirt',
+           'Bugatti Divo',
+           '55in OLED HT TV',
+           'carvubg Skis',
+           'Ski boots'
+        ]
+
+        const Shops = [
+            'London',
+            'Paris',
+            'NY',
+            'Swansea'
+        ]
+
+       class ItemsList extends React.Component {
+            render() {
+                let tagName = this.props.isOrdered ? 'ol' : 'ul';
+
+                return React.createElement(
+                    tagName,null,
+                    this.props.items.map((item, i) => React.createElement('li',{key:i, title:item},item))
+                );
+            }
+        }
+
+        class App extends React.Component{
+            render(){
+                return React.createElement('div',null,
+                React.createElement('h1',null,'Catalog'),
+                React.createElement(ItemsList,{items: Catalog, isOrdered : true}),
+                React.createElement('h1',null,'Shops'),
+                React.createElement(ItemsList,{items:Shops, isOrdered : false})
+                )
+            }
+        }
+
+        const app = React.createElement(App)
+        const root = createRoot(document.getElementById('root'))
+        root.render(app);
+        
+     
+    </script>
+</body>
+</html>

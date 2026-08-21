@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Raw import using CDN</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module">
+        import React from "https://esm.sh/react"
+        import { createRoot } from "https://esm.sh/react-dom/client"
+
+        const obj = React.createElement(
+            'h1', //what to render
+            {'id': 'my-msg','title': 'this is my message'}, // object properties
+            'Hello React!'//child content
+        )
+
+        const root = createRoot(document.getElementById('root'))
+        root.render(obj)
+    </script>
+    
+</body>
+</html>

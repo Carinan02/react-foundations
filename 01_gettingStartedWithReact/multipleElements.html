@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="importmap">
+        {
+                "imports" : {
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script type="module">
+        import React from "react"
+        import { createRoot } from "react-dom/client"
+
+        const container = React.createElement('div',null,React.createElement('h1',{'title' : 'this is my header'},'Catalog'),
+        React.createElement('ul',null,
+        React.createElement('li',null,'Swabsea Cut shirt'),
+        React.createElement('li',null,'Cardiff City shirt'),
+        React.createElement('li',null,'Bugatti Divo'),
+        React.createElement('li',null,'55in OLED HD TV'),),
+        React.createElement('h1',null,'Shops'),React.createElement('ul',null,React.createElement('li',null,'London'),
+        React.createElement('li',null,'Paris'),
+        React.createElement('li',null,'NY')))
+
+        const root = createRoot(document.getElementById('root'))
+        root.render(container);
+    </script>
+</body>
+</html>

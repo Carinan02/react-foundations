@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="importmap">
+        {
+                "imports" : {
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script type="module">
+        import React from "react"
+        import { createRoot } from "react-dom/client"
+
+        const products = [
+            'Swabsea Cut shirt',
+            'Cardiff City shirt',
+            'Bugatti Divo',
+            '55in OLED HD TV',
+            'Shops',
+        ]
+
+        const shops = [
+            'London',
+            'Paris',
+            'NY'
+        ]
+
+        const prodList = React.createElement('ul',null,
+            products.map((p,i) => React.createElement('li',{key : i},p))
+        )
+
+        const shopList = React.createElement('ul',null,
+            shops.map((s,i) => React.createElement('li',{key: i},s))
+        )
+
+        console.log(shopList)
+        const container = React.createElement('div',null,React.createElement('h1',{'title' : 'this is my header'},'Catalog'),
+        prodList,
+        React.createElement('h1',null,'Shops'),shopList)
+
+        const root = createRoot(document.getElementById('root'))
+        root.render(container);
+    </script>
+</body>
+</html>
