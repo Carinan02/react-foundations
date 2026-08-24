@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lab 2 - Lab 1 refactorred to use class-based components</title>
+    <title>Lab 3 - Lab 2 refactorred to use functional components</title>
 
     <style>
         body {
@@ -61,54 +61,55 @@
         new Film('Love Actually', 'RomCom', ' Hugh Grant playing Hugh Grant')
     ]
    
-    class ItemsList extends React.Component{
-        render(){
-            let tagName = this.props.ordered ? 'ol' : 'ul';
+    function ItemsList({items , ordered}) { //descrutured object properties into variables
+            let tagName = ordered ? 'ol' : 'ul';
             return React.createElement(tagName,null,
-                this.props.items.map(
+                items.map(
                     (item, idx) => 
                      React.createElement('li',{key : idx, title : item.toString()},item.toString()) // explicitly return the value
                 )
             )
         }
-    }
-    class ItemsTable extends React.Component {
-    render() {
+    
+    function ItemsTable(props){ // full object
         return React.createElement(
             'table',
             null,
+
             React.createElement(
                 'thead',
                 null,
+
                 React.createElement(
                     'tr',
                     null,
-                    Object.keys(this.props.items[0]).map((key)=>
+                    Object.keys(props.items[0]).map((key)=>
                     React.createElement('th',null,key)
                     )
+                    
                 )
             ),
 
             React.createElement(
                 'tbody',
                 null,
-                this.props.items.map(
+                props.items.map(
                     (item, idx) => 
+                    
+
                      React.createElement(
                     'tr',
                     null,
-                    Object.keys(this.props.items[idx]).map((key)=>
+                    Object.keys(props.items[idx]).map((key)=>
                     React.createElement('td',null,item[key])
                     )
                 )
                 )
             )
         );
-    }
 }
-    class App extends React.Component{
-        render(){
-            return React.createElement('div',null,
+    function App (){
+       return React.createElement('div',null,
             React.createElement('h1',null,'My Library'),
             React.createElement('h2',null,'Books list'),
             React.createElement(ItemsList,{items: books, ordered : true}),
@@ -119,8 +120,8 @@
             React.createElement('h2',null,'Films table'),
             React.createElement(ItemsTable,{items: films}),
            )
-        } 
-    }
+        }
+    
     const app = React.createElement(App);
     const root = createRoot(document.getElementById('root'))
     root.render(app)

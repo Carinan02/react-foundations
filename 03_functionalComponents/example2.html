@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passing properties to a functional component</title>
+</head>
+<body>
+    <div id ="root"></div>
+    <script type ="importmap">
+        {
+            "imports" : {
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script type= "module">
+        import React from "react"
+        import { createRoot } from "react-dom/client"
+
+        const Products = ['Swansea City Shirt','Cardiff City shirt','Bugatti Divo','News gt']
+
+        const Shops = ['NY','London','Paris']
+
+
+        function ItemsList(props){
+            
+           return React.createElement('ul',null,
+                props.items.map((item, i) => React.createElement('li',{key : i},item)
+            )
+           )
+            
+        }
+
+        
+        function App(){
+            return React.createElement('div',null,
+                React.createElement('h1',null,'Catalog'),
+                React.createElement(ItemsList,{items: Products}),
+                React.createElement('h1',null,'Shops'),
+                React.createElement(ItemsList,{items: Shops})
+            )
+        }
+
+        const root = createRoot(document.getElementById('root'))
+        const app = React.createElement(App);
+        root.render(app)
+    </script>
+
+</body>
+</html>
