@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluation JavaScript Expression in  JSX </title>
+</head>
+<body>
+    <div id ="root"></div>
+    <script type="importmap">
+        {
+            "imports" :{
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!--Note that the data- prefix is a standard JavaScript technique to add custom attributes.  -->
+    <!-- This enables us to effectively set the "type" attribute twice, to "module" and "text/babel"-->
+    <script data-type="module" type="text/babel">
+        import React from "react"
+        import { createRoot } from "react-dom/client"
+
+        function ItemList(){
+            const timestamp = new Date().toLocaleTimeString()
+            return (
+                <div>
+                    <h1>JSX Example 2</h1>
+                    <ul>
+                        <li>Swansea shirt</li>
+                        <li>Cardiff shirt</li>
+                        <li>Lamborghini</li>
+                    </ul>
+                    <small>Page generated at {timestamp} </small> 
+                </div>
+            )
+        }
+
+        const root = createRoot(document.getElementById('root'))
+        root.render(<ItemList />)
+    </script>
+    
+</body>
+</html>

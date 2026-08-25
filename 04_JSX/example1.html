@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using Babel to transpile/transform JSX code to javascript</title>
+    <!-- JSX  - a combination of JavaScript and XML-->
+    <!--Browsers don't understand JSX syntax directly
+        JSX syntax must be transpiled into "pure" React
+        Babel is a JavaScript transpiler.
+    -->
+</head>
+<body>
+    <div id ="root"></div>
+    <script type="importmap">
+        {
+            "imports" :{
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!--Note that the data- prefix is a standard JavaScript technique to add custom attributes.  -->
+    <!-- This enables us to effectively set the "type" attribute twice, to "module" and "text/babel"-->
+    <script data-type="module" type="text/babel"> //type = module means this will import module from other sources 
+                                                  //type = text/babel means babel will transpile code inside this tag
+        import React from "react"
+        import { createRoot } from "react-dom/client";
+
+        function ItemList(){
+            return (
+                <div>
+                    <h1>JSX Example 1</h1>
+                    <ul>
+                        <li>Swansea shirt</li>
+                        <li>Cardiff shirt</li>
+                        <li>Lamborghini</li>
+                    </ul>
+                </div>
+            )
+        }
+        const root = createRoot(document.getElementById('root'));
+        root.render(<ItemList/>) //babel will transpile this and call the React.createElement method
+    </script>
+</body>
+</html>
