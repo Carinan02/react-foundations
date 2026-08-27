@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic State Management</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="importmap">
+        {
+            "imports" :{
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script data-type="module" type="text/babel">
+        import React, {useState} from "react"
+        import { createRoot } from "react-dom/client"
+
+        function App(){
+            const date = new Date().toLocaleTimeString()
+            const [hitCount, setHitCount] = useState(0)
+
+            return(
+                <div>
+                    <h1>State Management - Simple Example</h1>
+                    <button onClick = {()=>setHitCount(hitCount +1)} > Click me </button>
+                    <p>Hit count: {hitCount}</p>
+                    <small>Last update: {date}</small>
+                </div>
+            )
+        }
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App/>)
+    </script>
+</body>
+</html>

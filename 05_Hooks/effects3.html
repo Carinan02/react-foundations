@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defining effects with dependencies</title>
+    <style>
+        .gallery{
+            font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: fixed;
+            width: 100%;
+            left: 4%;
+            -webkit-transform: translateX(-2%);
+            transform: translate(-2%);
+        }
+        .largeImage{
+            width: 94%;
+        }
+        .smallImage{
+            width: 10%;
+            margin-right: 2%;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="importmap">
+        {
+            "imports" :{
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script data-type="module" type="text/babel">
+        import React, {useState, useEffect} from "react"
+        import { createRoot } from "react-dom/client"
+
+        const urls = [
+            'alesund.jpg',
+            'bronnoysud.jpg',
+            'budapest.jpg',
+            'capetown.jpg',
+            'cork.jpg',
+            'joburghadeda.jpg',
+            'oslo.jpg',
+            'singapore.jpg'];
+        const baseAddress = "http://olsensoft.com/thumbnails";
+
+
+        function App({baseAddress, urls}){
+            const [selectedUrl, setSelectedUrl] = useState(undefined)
+            const [clickCount, setClickCount] = useState(0)
+
+            useEffect(()=>{  //no dependency it will always rerender 
+                console.log('Gallery Effect 1')
+                return () => { //clean up code will run before the next re-render or when the component is unmounted / destroyed
+                    console.log('Gallry effect 1 cleanup')
+                }
+            })
+
+            useEffect(()=>{//with dependency - It will run on the initial render, and then again whenever clickCount changes.
+                console.log('Gallery Effect 2')
+                return () => {
+                    console.log('Gallery effect 2 cleanup.')
+                }
+            },[clickCount])
+            
+            useEffect(()=>{//with dependency - it will run on initial and when the selectedUrl changes, will not change if clicked the same image
+                console.log('Gallery effect 3.')
+                return () => {
+                    console.log("Gallery effect 3 cleanup")
+                }
+            },[selectedUrl])
+
+            useEffect(()=>{//empty dependency array, - it will only run on initial , clean up code will only run once just before the component is unmounted
+                console.log('Gallery effect 4.')
+                return () => {
+                    console.log("Gallery effect 3 cleanup")
+                }
+            },[])
+            const mainContent = selectedUrl ? <img src={baseAddress + '/'+ selectedUrl} className='largeImage' />
+                                : <h2>No Image Selected </h2>
+            return (
+                <div className="gallery">
+                    <button onClick={clearGallery}>Clear Gallery</button>
+                    <div>Click Count {clickCount}</div>
+                    <div>
+                        {
+                            urls.map((url,i) => 
+                            <img key={i} src={baseAddress + '/'+ url}
+                            className='smallImage'
+                            onClick={()=> {
+                                console.log(`Thumbnal Click at ${new Date().toLocaleString}`)
+                                setSelectedUrl(url)
+                                setClickCount(clickCount + 1)
+                            }} />
+                        )}
+                    </div>
+                    <div>{mainContent}</div>
+                </div>
+            )
+        }
+
+        const root = createRoot(document.getElementById('root'))
+        root.render(<App baseAddress= {baseAddress} urls = {urls}/>)
+
+        function clearGallery(){ //this will unmount / destroy the App component
+            root.render(
+                <div className="gallery">Gallery Cleared</div>
+            )
+        }
+    </script>
+</body>
+</html>
