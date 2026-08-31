@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Management - Realistic Example</title>
+    <style>
+        .gallery{
+            font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: fixed;
+            width: 100%;
+            left: 4%;
+            -webkit-transform: translateX(-2%);
+            transform: translate(-2%);
+        }
+        .largeImage{
+            width: 94%;
+        }
+        .smallImage{
+            width: 10%;
+            margin-right: 2%;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="importmap">
+        {
+            "imports" :{
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script data-type="module" type="text/babel">
+        import React, {useState, useEffect} from "react"
+        import { createRoot } from "react-dom/client"
+
+
+         function App(){
+
+            const url = 'https://shiny-acorn-v6vq9jjj9q6427j6-3000.app.github.dev/api/thumbnailUrls';
+
+            function oldPromise(){
+                const promise = fetch(url); //returns a promise
+                console.log('In fetch Data v1, Calling REST Service')
+
+                promise.then(response => {
+                    const promise2 = response.json() // also returns a promise
+                    promise2.then(data => {
+                        console.log(`Result: ${data}`)
+                    })
+                })
+            } 
+            
+            async function fetchUrl(){
+                console.log('In fetch Data v2, Calling REST Service')
+                const response = await fetch(url);
+                    
+                const data = await response.json();
+                console.log(`Result: ${data}`)
+            }
+
+            return (
+                <div>
+                   <h1>REST Client 1</h1>
+                   <div><button onClick={oldPromise}>Call REST service [v1]</button> <button onClick={fetchUrl}>Call REST service [v2]</button></div>
+                    <p>See console to see result</p>
+                </div>
+            )
+        }
+
+        const root = createRoot(document.getElementById('root'))
+        root.render(<App />)
+    </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calling a REST Service via an Effect</title>
+    <style>
+        .gallery{
+            font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: fixed;
+            width: 100%;
+            left: 4%;
+            -webkit-transform: translateX(-2%);
+            transform: translate(-2%);
+        }
+        .largeImage{
+            width: 94%;
+        }
+        .smallImage{
+            width: 10%;
+            margin-right: 2%;
+        }
+    </style>
+</head>
+<body>
+    <div id ="root"></div>
+    <script type="importmap">
+        {
+            "imports":{
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+     <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+
+     <script data-type="module" type="text/babel">
+        import React,{useState, useEffect} from "react"
+        import {createRoot} from "react-dom/client"
+
+        function App(){
+            
+            const [selectedUrl, setSelectedUrl] = useState(undefined)
+            const [urls,setUrls] = useState([])
+            const [isLoading,setIsLoading] = useState(false)
+
+            const baseAddress = "http://olsensoft.com/thumbnails";
+
+            //Run this effect only after initial render
+            useEffect(()=>{
+                async function fetchData() {
+                    setIsLoading(true)
+
+                    try {
+                        const url = 'https://shiny-acorn-v6vq9jjj9q6427j6-3000.app.github.dev/api/thumbnailUrls';
+                        const response = await fetch(url);
+                        if(!response.ok){
+                            throw Error(response.statusText)
+                        }
+                        const urlsResult = await response.json();
+                        setUrls(urlsResult)
+                        setIsLoading(false)
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+
+                fetchData()
+            },[])
+
+            const mainContent = selectedUrl ? <img src={baseAddress + '/'+ selectedUrl} className='largeImage' />
+                                : <h2>No Image Selected </h2>
+
+
+            return (
+                <div className="gallery">
+                {
+                    isLoading ? <p>fetching data from server </p> : 
+                    <>
+                            <div>
+                                <div>{
+                                     urls.map((url,i) => 
+                                        <img key={i} src={baseAddress + '/'+ url}
+                                        className='smallImage'
+                                        onClick={()=> setSelectedUrl(url)} />
+                                    )}
+                                </div>
+                                <div>Updated {new Date().toString()}</div>
+                                <div>{mainContent}</div>
+                                
+                            </div>
+                            
+                     
+                    </>
+                }
+                </div>
+            )
+            
+        }
+
+        const root = createRoot(document.getElementById('root'))
+        root.render(<App/>)
+     </script>
+</body>
+</html>

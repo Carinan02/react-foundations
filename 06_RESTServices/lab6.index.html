@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lab 6 - Lab 5 refactorred to use REST Service</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="importmap">
+        {
+                "imports" : {
+                "react" : "https://esm.sh/react",
+                "react-dom/client" : "https://esm.sh/react-dom/client"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+
+<script data-type="module" type="text/babel">
+      
+    import React, {useState, useEffect} from "react"
+    import { createRoot } from "react-dom/client"
+
+    class Book {
+        constructor(title, author) {
+            this.title = title
+            this.author = author
+        }
+
+        toString() {
+            return `${this.title}, by ${this.author}`
+        }
+    }
+
+    class Film {
+        constructor(name, genre, blurb) {
+            this.name = name
+            this.genre = genre
+            this.blurb = blurb
+        }
+
+        toString() {
+            return `${this.name} [${this.genre}], ${this.blurb}`
+        }
+    }
+
+
+    function ItemsList({items , ordered}) { //descrutured object properties into variables
+                                            //Will keep this to use the React.createElement rather than JSX
+                let tagName = ordered ? 'ol' : 'ul';
+                return ( React.createElement(tagName,null,
+                    items.map(
+                        (item, idx) => 
+                        React.createElement('li',{key : idx, title : item.toString()},item.toString()) // explicitly return the value
+                    )
+                )
+            )
+        }
+    
+    function ItemsTable({items}){ // full object
+        return (<> {  items ?   <table>
+                        <thead>
+                            <tr>
+                                {
+                                    Object.keys(items[0]).map((key)=> <th>{key}</th>)
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                items.map((item, idx) => 
+                                <tr>
+                                    {
+                                        Object.keys(items[idx]).map((key)=>
+                                        <td>{item[key]}</td>
+                                    
+                                        )
+                                    }
+                                </tr>
+                            )
+                            }
+                        </tbody>
+                    </table> : <> </>
+                }
+                </>
+                )
+                
+        }//end of ItemsTable
+    function LikePanel({tabular, setTablular}){
+         const [likeCount, setLikeCount] = useState(0);
+         
+         useEffect(()=>{
+            console.log(`Likes count set to ${likeCount} at ${new Date().toLocaleTimeString()}`)
+
+            return () => {
+                console.log('clean up effect 1')
+            }
+         },[likeCount])
+
+        return(
+            
+            <div>Like Count: <bold>{likeCount}</bold> 
+                <button onClick={()=>setLikeCount(likeCount + 1)}>Like </button>
+                <button onClick={()=>setLikeCount(0)}>Reset Likes</button> 
+                <button onClick={()=>setTablular(!tabular)}>Toogle View </button>
+            </div>
+        )
+    }    
+    function Library (){
+        const [tabular,setTabular] = useState(true);
+        const [books, setBooks] = useState(undefined);
+        const [films,setFilms] = useState(undefined)
+        const [isLoading, setIsLoading] = useState(false);
+
+        useEffect(()=>{
+            async function getData(){
+                try {
+                    setIsLoading(true)
+                    const bookApi = 'https://shiny-acorn-v6vq9jjj9q6427j6-3000.app.github.dev/api/books';
+                    const filmApi = 'https://shiny-acorn-v6vq9jjj9q6427j6-3000.app.github.dev/api/films';
+                    const responseBook = await fetch(bookApi) 
+                    const responseFilm = await fetch(filmApi)
+
+                   if(!responseBook.ok ){
+                        throw Error(responseBook.statusText)
+                    }
+                   const booksRaw = await responseBook.json();
+                  
+                    const bookClass = booksRaw.map((book) => {
+                        //alert(book.title)
+                        return new Book(book.title,book.author)
+                    })
+                    
+                    if(!responseFilm.ok ){
+                        throw Error(responseFilm.statusText)
+                    }
+                   const filmsRaw = await responseFilm.json();
+                  
+                    const filmClass = filmsRaw.map((film) => {
+                        //alert(film.name)
+                        return new Film(film.name,film.genre,film.blurb)
+                    })
+
+                    setFilms(filmClass)
+                    setBooks(bookClass)
+                    setIsLoading(false)
+                        
+                } catch (error) {
+                    alert(error)
+                   // console.log(error)
+                }
+            }
+            getData();
+        },[])
+
+        
+        
+        const View2 = () => tabular ?
+                <><h2>Books Table</h2>
+                <ItemsTable items = {books} />
+                <h2>Films Table</h2>
+                <ItemsTable items = {films} /> 
+                </>
+                : <> <h2>Books List</h2>
+                <ItemsList items = {books} ordered = {true} />
+                <h2>Films List</h2>
+                <ItemsList items = {films} ordered = {false} />
+                </>
+                
+       
+        return (
+            <div>
+                <h1>My Library</h1>
+                {
+                    isLoading ? <p>Loading Data</p> :  <View2/>
+                }
+               
+                <h1>Like My Library</h1>
+                <LikePanel setTablular = {setTabular} tabular = {tabular} />
+            </div>                                                                                                   
+        )
+    }
+    
+    function App(){
+
+
+        return (
+            <Library />
+        )
+    }
+
+    const root = createRoot(document.getElementById('root'))
+    root.render(<App/>)
+
+    
+</script>
+
+</body>
+</html>
