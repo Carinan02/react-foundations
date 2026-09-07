@@ -22,7 +22,7 @@ Build the application for production
 React Router to support routing in react application
 # npm install react-router-dom@latest
 
-If using typescript also need 
+If using typescript also need - if react router is lower than v6 
 # npm install @type/react-router-dom@latest  -d
 
 Optional: 

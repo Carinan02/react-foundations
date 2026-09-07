@@ -8,8 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-#dist - uncommented for the demo
-#dist-ssr - uncommented for the demo
+dist
+dist-ssr
 *.local
 
 # Editor directories and files
