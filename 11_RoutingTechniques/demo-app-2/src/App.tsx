@@ -13,6 +13,8 @@ import ProductV2_useNavigate from "./ProductV2_useNavigate"
 import ProductNestedRoute from "./ProductNestedRoute"
 import ProductSummary from "./ProductSummary"
 
+import TsAndCs, { TsandCsForRegion, getDataForRegion} from "./TsAndCs"
+
 function AppLayout(){
   return (
     <>
@@ -57,6 +59,10 @@ const router = createBrowserRouter([
         {path : ':id', element : <Product />},
         {path : 'summary',  element: <ProductSummary />} 
       ]},
+
+      /**Demostrate how to load data for a route */
+      {path : 'ts-and-cs', element: <TsAndCs />}, 
+      {path : 'ts-and-cs/:id', element: <TsandCsForRegion />, loader: getDataForRegion}, /**the loader will be invoked first once the user go to the path, it will include the parameter and will be used by the loader function */
 
       {path: '/contact', element: <Contact />},
       {path: '*', element: <PageNotFound />},
